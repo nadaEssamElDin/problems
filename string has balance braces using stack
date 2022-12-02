@@ -1,0 +1,44 @@
+#include<iostream>
+#include<string>
+#include<stack>
+using namespace std;
+// is string has balance braces using stack
+bool isbalance(string s) {
+	stack<char>stak;
+	for (int i = 0; i < s.length(); i++) {
+		if (s[i] == '(' || s[i] == '{' || s[i] == '[') {
+			stak.push(s[i]);
+		}
+		if (stak.empty()) {
+			return false;
+		}
+			 else if (s[i] == ')' && stak.top() == '(')
+				stak.pop();
+		
+		else if (s[i] == '}' && stak.top() == '{')
+			stak.pop();
+	
+			else if (s[i] == ']' && stak.top() == '[')
+			stak.pop();
+			
+			}
+	if (stak.empty()) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+int main() {
+	string s;
+	cout << "Enter string: ";
+	cin >> s;
+	if (isbalance(s)) {
+		cout << "Balanced" << endl;
+	}
+	else {
+		cout << "Not Balanced" << endl;
+	}
+	system("pause");
+	return 0;
+}
