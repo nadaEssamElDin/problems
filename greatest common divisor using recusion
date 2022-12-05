@@ -1,0 +1,22 @@
+#include<iostream>
+using namespace std;
+int solve(int x, int y, int n) {
+	if (x % n == 0 && y % n == 0) {
+		return n;
+	}
+	else
+	{
+		solve(x, y, n - 1);
+	}
+}
+int	gcd(int x, int y) {
+	int n = 0;
+	if (x > y)
+		n = y;
+	else
+		n = x;
+	return solve(x, y, n);
+}
+int main() {
+	cout<<gcd(9, 6);
+}
