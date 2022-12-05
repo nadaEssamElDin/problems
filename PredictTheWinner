@@ -1,0 +1,58 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<stack>
+#include<fstream>
+#include<list>
+using namespace std;
+int maxx(vector<int>& nums) {
+	int max=-1;
+	for (int i = 0; i < nums.size()-1; i++) {
+		if (nums[i] > nums[i + 1]) {
+			if (max<nums[i])
+			max = nums[i];
+		}
+		else {
+			if(max<nums[i+1])
+			   max = nums[i + 1];
+		}
+	}
+	return max;
+}
+bool solve(vector<int>& v,int arr[2], int player = 1) {
+	int size = v.size();
+	if (v.size()==1) {
+		if (arr[1] > arr[2]) {
+			return true;
+		}
+		else {
+			if (arr[1] < arr[2]) {
+				return false;
+			}
+		}
+	}
+	else {
+		if (!(v[1] == maxx(v))) {
+			arr[player] += v[0];
+			v.erase(v.begin());
+			solve(v, arr, player % 2 + 1);
+		}
+		else
+		{
+				arr[player] += v[size-1];
+				v.erase(v.end()-1);
+				solve(v, arr, player % 2 + 1);
+			
+		}
+	}
+	
+}
+bool PredictTheWinner(vector<int>& v){
+	int arr[] = { 0,0,0 };
+	return solve(v, arr);
+}
+int main() {
+	vector<int> v{ 1,5,233,7 };
+	cout<<PredictTheWinner(v);
+	
+}
