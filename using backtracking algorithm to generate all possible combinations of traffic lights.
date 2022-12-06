@@ -1,0 +1,47 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+//	using backtracking algorithm to generate all possible combinations of traffic lights.
+vector<string> traffic_light;
+void permutation(int n) {
+	//base case
+	if (n == 0) {
+		//print the traffic lights
+		cout << ".";
+		for (int i = 0; i < traffic_light.size(); i++) {
+			cout<<i+1<<"-" << traffic_light[i] << " ";
+		}
+		cout << endl;
+	}
+	else {
+		//recursive case
+		//push RED to the vector
+		traffic_light.push_back("RED");
+		//call the function again
+		permutation(n - 1);
+		//pop RED from the vector
+		traffic_light.pop_back();
+		//push GREEN to the vector
+		traffic_light.push_back("GREEN");
+		//call the function again
+		permutation(n - 1);
+		//pop GREEN from the vector
+		traffic_light.pop_back();
+		//push YELLOW to the vector
+		traffic_light.push_back("YELLOW");      // to add yellow light
+		//call the function again
+		permutation(n - 1);
+		//pop YELLOW from the vector
+		traffic_light.pop_back();
+	}
+}
+int main() {
+	int n;
+	cout << "Enter the number of traffic lights: ";
+cin >> n;
+	permutation(n);
+	return 0;
+	
+	
+}
