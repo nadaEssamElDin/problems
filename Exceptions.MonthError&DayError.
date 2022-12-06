@@ -1,0 +1,160 @@
+#include<iostream>
+#include<string>
+#include<fstream>
+#include<sstream>
+#include<cstdlib>
+#include<ctime>
+//#include<datetimeapi.h>
+using namespace std;
+class  MonthError : public std::exception
+{
+	public:
+	MonthError() {}
+	~MonthError() {}
+	const char* what() const throw()
+	{
+		return "Invalid Month";
+	}
+};
+class  DayError : public std::exception
+{
+public:
+	DayError() {}
+	~DayError() {}
+	const char* what() const throw()
+	{
+		return "Invalid Day";
+	}
+};
+string convertdate(string date){
+	int Day, Month;
+	int c;
+	string newdata;
+   string day="", month="";
+	for (int i = 0; i < date.length(); i++) {
+		if (date[i] != '/') {
+			month += date[i];
+			 c = i+1;
+		}
+		else {
+			break;
+		}
+	}
+	for (int j = c+1; j < date.length(); j++) {
+			day += date[j];
+	}
+	
+	Day = atoi(day.c_str());
+	day = to_string(Day);
+	Month = atoi(month.c_str());
+	if (Month == 1) {
+		newdata = "January " + day;
+		return newdata;
+			
+	}
+	else if (Month == 2) {
+		newdata = "February " + day;
+		return newdata;
+	}
+	else if (Month == 3) {
+		newdata = "March " + day;
+		return newdata;
+	}
+	else if (Month == 4) {
+		newdata = "April " + day;
+		return newdata;
+	}
+	else if (Month == 5) {
+		newdata = "May " + day;
+		return newdata;
+	}
+	else if (Month == 6) {
+		newdata = "June " + day;
+		return newdata;
+	}
+	else if (Month == 7) {
+		newdata = "July " + day;
+		return newdata;
+	}
+	else if (Month == 8) {
+		newdata = "August " + day;
+		return newdata;
+	}
+	else if (Month == 9) {
+		newdata = "September " + day;
+		return newdata;
+	}
+	else if (Month == 10) {
+		newdata = "October " + day;
+		return newdata;
+	}
+	else if (Month == 11) {
+		newdata = "November " + day;
+		return newdata;
+	}
+	else if (Month == 12) {
+		newdata = "December " + day;
+		return newdata;
+	}
+	else {
+		return "Invalid Date";
+	}
+}
+int main() {
+	//using  Exceptions handling
+		string date;
+		int c;
+		int Day, Month;
+		string month="", day = "";
+		cout << "Enter the date in the format of mm/dd: ";
+		cin >> date;
+		for (int i = 0; i < date.length(); i++) {
+			if (date[i] != '/') {
+				month += date[i];
+				c = i + 1;
+			}
+			else {
+				break;
+			}
+
+		}
+		for (int j = c + 1; j < date.length(); j++) {
+			day += date[j];
+		}
+
+		Day = atoi(day.c_str());
+		day = to_string(Day);
+		Month = atoi(month.c_str());
+		
+		
+		try{
+			if (Month > 12 || Month < 1) {
+				throw MonthError();
+			}
+			else if (Day > 31 || Day < 1) {
+				throw DayError();
+			}
+			if (Month == 2 && Day > 28) {
+				throw DayError();
+			}
+			else if ((Month == 4 || Month == 6 || Month == 9 || Month == 11)&& (Day > 30)) {
+					throw DayError();
+			}
+			else if ((Month == 1 || Month == 3 || Month == 5 || Month == 7 || Month == 8 || Month == 10 || Month == 12) && (Day > 31)){
+					throw DayError();
+			}
+		
+			else {
+				cout << convertdate(date);
+			}
+		}
+		catch (MonthError& e) {
+			cout << e.what() << endl;
+		}
+		catch (DayError& e) {
+			cout << e.what() << endl;
+		}
+		catch (...) {
+			cout << "Unknown Error" << endl;
+		}
+}
