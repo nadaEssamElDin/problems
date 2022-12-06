@@ -106,7 +106,8 @@ int main() {
 		int c;
 		int Day, Month;
 		string month="", day = "";
-		cout << "Enter the date in the format of mm/dd: ";
+		cout << "Enter the date in the format of mm/dd: "<<endl;
+		cout << "please be sure that the date is valid: " << endl;
 		cin >> date;
 		for (int i = 0; i < date.length(); i++) {
 			if (date[i] != '/') {
