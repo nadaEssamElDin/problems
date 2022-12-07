@@ -4,6 +4,7 @@
 using namespace std;
 //	using backtracking algorithm to generate all possible combinations of traffic lights.
 vector<string> traffic_light;
+string quesion;
 void permutation(int n) {
 	//base case
 	if (n == 0) {
@@ -15,7 +16,10 @@ void permutation(int n) {
 		cout << endl;
 	}
 	else {
-		//recursive case
+		
+		if (quesion == "NO") {
+			//recursive case
+		
 		//push RED to the vector
 		traffic_light.push_back("RED");
 		//call the function again
@@ -28,20 +32,38 @@ void permutation(int n) {
 		permutation(n - 1);
 		//pop GREEN from the vector
 		traffic_light.pop_back();
+		}
+		else if (quesion == "YES") {
+			//push RED to the vector
+			traffic_light.push_back("RED");
+			//call the function again
+			permutation(n - 1);
+			//pop RED from the vector
+			traffic_light.pop_back();
+			//push GREEN to the vector
+			traffic_light.push_back("GREEN");
+			//call the function again
+			permutation(n - 1);
+			//pop GREEN from the vector
+			traffic_light.pop_back();
 		//push YELLOW to the vector
 		traffic_light.push_back("YELLOW");      // to add yellow light
 		//call the function again
 		permutation(n - 1);
 		//pop YELLOW from the vector
 		traffic_light.pop_back();
+		}
+		else {
+			cout << "Invalid input" << endl;
+		}
 	}
 }
 int main() {
+	cout << "is there a yellow at your country? enter YES/NO ";
+	cin >> quesion;
 	int n;
 	cout << "Enter the number of traffic lights: ";
-cin >> n;
+	cin >> n;
 	permutation(n);
 	return 0;
-	
-	
 }
