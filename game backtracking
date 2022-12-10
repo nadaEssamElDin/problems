@@ -1,0 +1,219 @@
+#include <string>
+#include <vector>
+#include<iomanip>
+#include <algorithm>
+#include <ctime>
+#include <cstdlib>
+using namespace std;
+// rockets Game
+class Board
+{
+protected:
+    int n;
+    char** board;
+public:
+    void fill_Board(int n, char up, char left)
+    {
+
+        //Each player starts with n – 2 rockets
+        this->n = n;
+        board = new char* [n];
+        for (int i = 0; i < n; i++)
+        {
+            board[i] = new char[n];
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+            {
+                board[i][j] = '0';
+            }
+        }
+        board[0][0] = '1';
+        board[0][n - 1] = '1';
+        board[n - 1][0] = '1';
+        board[n - 1][n - 1] = '1';
+        //one player has rockets in the left side facing right
+
+        for (int i = 1; i < n - 1; i++)
+        {
+            board[0][i] = up;
+            board[i][0] = left;
+        }
+    }
+    int get_n() {
+        return n;
+    }
+
+    bool update_board(int x, int y, char direction, char symbol) {
+        if (!(x < 1 || x > n - 1 || y < 1 || y > n - 1) && board[x][y] == '0') {
+            if (direction == 'X') {
+                if (board[x][y - 1] == toupper(symbol)) {
+                    board[x][y] = toupper(symbol);
+                    board[x][y - 1] = '0';
+                    return true;
+                }
+                else if (board[x][y - 1] != '0' && board[x][y - 2] == toupper(symbol)) {
+                    board[x][y] = toupper(symbol);
+                    board[x][y - 2] = '0';
+                    return true;
+                }
+                return false;
+            }
+            else if (direction == 'Y') {
+                if (board[x - 1][y] == symbol) {
+                    board[x][y] = toupper(symbol);
+                    board[x - 1][y] = '0';
+                    return true;
+                }
+                else if (board[x - 1][y] != '0' && board[x - 2][y] == toupper(symbol)) {
+                    board[x][y] = toupper(symbol);
+                    board[x - 2][y] = '0';
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    // Display the board and the pieces on it
+    void display_board() {
+        cout << "---------------------------" << endl;
+        for (int i = 0; i < n; i++)
+        {
+            cout << "| ";
+            for (int j = 0; j < n; j++)
+                cout << board[i][j] << " | ";
+            cout << endl;
+            cout << "------------------------" << endl;
+        }
+    }
+    bool is_winner(char symbol) {
+        int count1 = 0;
+        int count2 = 0;
+        for (int i = 1; i < n-1; i++) {
+            if (board[i][n - 1] == toupper(symbol)) {
+                count1++;
+            }
+                if (board[n - 1][i] == toupper(symbol)) {
+                    count2++;
+                }    
+        }
+        if (count1 == n - 2 || count2 == n - 2)
+            return true;
+        else
+            return false;
+    }
+    bool availmove(char symbol, char direct)
+    {
+        int counter = 0;
+        for (int i = 0; i < (n - (direct == 'Y')); i++) {
+            for (int j = 0; j < (n - (direct == 'X')); j++) {
+                if (board[i][j] == symbol) {
+                    if (direct == 'X') {
+                        if (board[i][j + 1] == '0') {
+                            counter++;
+                        }
+                        else if (j != n - 2) {
+                            if (board[i][j + 2] == '0') {
+                                counter++;
+                            }
+                        }
+                    }
+                    else {
+                        if (board[i + 1][j] == '0') {
+                            counter++;
+                        }
+                        else if (i != n - 2) {
+                            if (board[i + 2][j] == '0') {
+                                counter++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return (counter > 0);
+    }
+  
+};
+class Player
+{
+private:
+    string name_player;
+    char symbol, direction;
+public:
+    Player(char symbol, char direction) { // Needed for computer players
+        this->symbol = symbol;
+        this->direction = direction;
+    }
+    char get_symbol() {
+        return symbol;
+    }
+    // Get symbol used by player
+    char get_direction() {
+        return direction;
+    }
+    Player(int order, char symbol, char direction)
+    {
+        cout << "Welcome player " << order << endl;
+        cout << "what is your name please?: ";
+        cin >> name_player;
+        this->symbol = symbol;
+        this->direction = direction;
+    }
+    virtual void get_move(int& x, int& y, Board& b) {
+        cout << "\nPlease enter your move x and y separated by spaces: ";
+        cin >> x >> y;
+    }
+    string to_string() {
+        return "Player: " + name_player;
+    }
+};
+class Gamemanager {
+public:
+    void play_game() {
+        int x, y, choice, n = 0;
+        Player* p[2];
+        p[0] = new Player(1, 'R', 'Y');
+        //  cout << "are you want to play with computer or not? (1/0): ";
+        //cin >> choice;
+        /*if (choice == 1)
+            p[1] = new compuerPlayer('G', 'Y');
+        else*/
+        p[1] = new Player(2, 'G', 'X');
+        while (n < 3) {
+            cout << " Enter the size of the board be sure that it must be greater than 2: ";
+            cin >> n;
+        }
+        Board b;
+        b.fill_Board(n, p[0]->get_symbol(), p[1]->get_symbol());
+        b.display_board();
+        while (true) {
+            for (int i = 0; i < 2; i++) {
+                if (b.availmove(p[i]->get_symbol(), p[i]->get_direction())) {
+                    p[i]->get_move(x, y, b);
+                    while (!(b.update_board(x, y, p[i]->get_direction(), p[i]->get_symbol()))) {
+                        cout << "Invalid move, please try again" << endl;
+                        p[i]->get_move(x, y, b);
+                    }
+                    b.display_board();
+					if (b.is_winner(p[i]->get_symbol())) {
+                        cout << p[i]->to_string() << " is the winner" << endl;
+                        return;
+                    }
+
+                }
+            }
+        }
+
+    }
+};
+int main()
+{
+    Gamemanager g;
+    g.play_game();
+    return 0;
+
+}
